@@ -5,7 +5,7 @@ P2P File Transfer over local networks
 I am working on this application to solve the following problems...
 1. Open source
   * Transparency and security are at the forefront of this application.  Even large enterprises should feel secure sending their intellectual property through this app because they know it's visible by their local network only. 
-2. Local File Sharing only
+2. Local File Sharing only aka FUCKING FAST
   * The app should not connect to the internet at all.  This will ensure privacy and robust speeds.  
   * The only time the internet should be involved is to route people to a locally hosted webpage with the correct IP address and port number. 
 3. Cross Platform
