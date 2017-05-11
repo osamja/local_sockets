@@ -13,6 +13,7 @@ I am working on this application to solve the following problems...
 4. Ease of sharing
   * See other users online 
   * Drag and drop sharing.  (Support sharing of extremely large files)
+  * Be able to send text/chat with other users on LAN
 
 
 ### Marketing
