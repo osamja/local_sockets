@@ -21,6 +21,9 @@ I am working on this application to solve the following problems...
 2. SPEED. 
   * Share files at the speed of light... or very quickly.  Don't get bottlenecked by the shiternet. 
 
+# Next Steps for MVP
+* Allow someone to create a server at a local IP and port and upload a file. 
+* Someone else on local network should be able to visit that URL and download. 
 
 ##### TODO
 1. Get list of all ip addresses in local network
