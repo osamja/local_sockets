@@ -22,9 +22,13 @@ I am working on this application to solve the following problems...
   * Share files at the speed of light... or very quickly.  Don't get bottlenecked by the shiternet. 
 
 # Next Steps for MVP
-* Allow someone to create a server at a local IP and port and upload a file. 
-* Someone else on local network should be able to visit that URL and download. 
-
+* Create python script that
+ 1. Gives me my ip address
+ 2. python local_sockets
+  * Should open up a web interface showing everyone who ran the local sockets program. This pg can just list ip's
+      ALGORITHM
+       1. This connects to my website which manages the local ip interface. 
+  * 
 ##### TODO
 1. Get list of all ip addresses in local network
 2. upload a txt file
