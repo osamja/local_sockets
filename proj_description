@@ -17,3 +17,10 @@ I am working on this application to solve the following problems...
 1. Emphasize that there is no server. This is a P2P app on your local network only. Your files are confidential between you and your network. 
 2. SPEED. 
   * Share files at the speed of light... or very quickly.  Don't get bottlenecked by the shiternet. 
+
+# Tech
+
+#### Simple webserver
+* python -m SimpleHTTPServer
+* Typing 'python -m SimpleHTTPServer' in a directory serves that directory (and all sub directories and files) up in a server.
+  This is accessible to anyone else on that local network. (Poses security risks...) 
