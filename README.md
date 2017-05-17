@@ -1,7 +1,7 @@
 # local_sockets
 P2P File Transfer over local networks
 
-# Next Steps for MVP
+# Next Steps
 * Create python script that
  1. Gives me my ip address
  2. python local_sockets
