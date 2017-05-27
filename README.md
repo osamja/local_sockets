@@ -1,5 +1,36 @@
 # local_sockets
-P2P File Transfer over local networks
+P2P File Transfer over local networks only. 
+
+Design Document for Project: local sockets
+==========================================
+
+## Group Members
+
+* Osam Javed <osamjaved@berkeley.edu>
+
+# Part 1: Server
+### Data Structures
+
+### Algorithms     
+
+### Synchronization
+
+### Rationale
+
+
+# Part 2: Client
+### Data Structures
+
+### Algorithms     
+
+### Synchronization
+
+### Rationale
+
+# Part 3: Views
+
+
+# Additional Questions:
 
 # Next Steps
 * Create python script that
@@ -11,3 +42,7 @@ P2P File Transfer over local networks
   * 
 
 
+What needs to work for first iteration:
+1. Go to local address at port #
+2. Choose to upload a file
+3. Someone can visit your local ip at your port and choose to download your file
