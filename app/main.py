@@ -4,18 +4,24 @@ from tkFileDialog import askopenfilenames
 import tkFileDialog
 import tkMessageBox
 import pdb
+import sys
+sys.path.insert(0, '/media/sammy/Baracuda/ubuntu/documents/summer_17/Networking/local_sockets/modules')
+from ip import get_ip_addr
 
-# get ip address
-ip_addr = ([l for l in ([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][:1], [[(s.connect(('192.168.2.1', 53)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) if l][0][0])
-print("My ip addr is: ", ip_addr)
 
-# setup GUI
 
-master = Tk()
-ip = StringVar(master)
-ip.set(ip_addr)
-
-filenames = []
+def setupGUI():
+    ip = StringVar(master)
+    ip.set(ip_addr)
+    Label(master, textvariable=ip).pack()
+    # display = Label(master, text="sammy")
+    #display.grid(row=20, column=10)
+    #display.configure(text="%s" % str(ip_addr))
+    display.pack()
+    separator = Frame(height=500, width=500, bd=1, relief=SUNKEN)
+    separator.pack(fill=X, padx=5, pady=5)
+    Button(master, text="Upload file", command=fileupload).pack()
+    
 
 def fileupload():
     while True:
@@ -27,7 +33,6 @@ def fileupload():
         if len(uploadedfiles)!=1:
            tkMessageBox.showinfo(message="Select at least one file!")
         else:
-            print("sucessfully uploaded this file")
             filenames.append(uploadedfiles)
             serveFile(filenames[0][0])
             return uploadedfiles
@@ -36,12 +41,13 @@ def serveFile(filename):
     port = 8080                    # Reserve a port for your service.
     s = socket.socket()             # Create a socket object
     host = ip_addr
-    print("host: ", host)
-    print("filename: ", filename)
     s.bind((host, port))            # Bind to the port
     s.listen(5)   
+    Label(master, textvariable=filename).pack()
     while True:
         print('while true')
+        display.configure(text="new file").pack()
+        print("uploading file ?")
         conn, addr = s.accept()     # Establish connection with client.
         print 'Got connection from', addr
         data = conn.recv(1024)
@@ -58,12 +64,16 @@ def serveFile(filename):
         print('Done sending')
         conn.send('Thank you for connecting')
         conn.close()
+    s.close()
     return
 
-Label(master, textvariable=ip).pack()
-separator = Frame(height=500, width=500, bd=1, relief=SUNKEN)
-separator.pack(fill=X, padx=5, pady=5)
-Button(master, text="Upload file", command=fileupload).pack()
 
-mainloop()
+# get ip address
+ip_addr = get_ip_addr()
+
+# Create GUI
+master = Tk()
+display = Label(master, text="sammy")
+filenames = []
+setupGUI()
 
