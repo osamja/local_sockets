@@ -1,4 +1,6 @@
 # local_sockets
+version 0.0
+
 P2P File Transfer over local networks only. 
 
 Design Document for Project: local sockets
@@ -8,26 +10,10 @@ Design Document for Project: local sockets
 
 * Osam Javed <osamjaved@berkeley.edu>
 
-# Part 1: Server
-### Data Structures
-
-### Algorithms     
-
-### Synchronization
-
-### Rationale
-
-
-# Part 2: Client
-### Data Structures
-
-### Algorithms     
-
-### Synchronization
-
-### Rationale
-
-# Part 3: Views
+# Part 1: Views
+The desktop application will be written in Python using the Tkinter library. One button that says 'Upload File' clicking 
+on that button will allow you to select any file on your drive.  The url to download that file will then be displayed showing the
+<ip address> <port #> 
 
 
 # Additional Questions:
