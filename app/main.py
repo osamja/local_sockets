@@ -13,53 +13,46 @@ class App:
         self.ip_addr = ip_addr
         self.port = 8080
         self.url = str(self.ip_addr) + ':' + str(self.port)
-        self.servedFile = ""
-        self.frame = Frame(master)
-        self.frame.pack()
-
-        self.button = Button(
-            self.frame, text="QUIT", fg="red", command=self.frame.quit
-            )
-        self.button.pack(side=LEFT)
         
+        self.filenames = []
+        self.frame = Frame(master)
+        self.frame.pack(fill=X, padx=50, pady=50)
+
+
+        self.upload = Button(master, text="Upload file", command=self.fileupload).pack()  
+
         self.hi_there = Button(self.frame, text="Hello", command=self.say_hi)
-        self.hi_there.pack(side=LEFT)
-        # self.label = Label(frame, text="%d" % self.counter)
-        # self.label.pack()
+        self.hi_there.pack()
+        self.servedFilename = Label(self.frame, text="")
+        self.servedFilename.pack()
 
     def say_hi(self):
         print "hi there, everyone!"
+        print("self upload: ", self.filenames) 
         # self.label.configure(text="%d" % self.ip_addr)
         # self.label.pack()
 
+    def showUploadedFile(self):
+        self.servedFilename.configure(text="%s" % self.filenames)
+        print('showing uploaded file name')
+        #self.servedFilename.configure(text="hi").pack()
+        return
 
-
-# def setupGUI():
-#     ip = StringVar(master)
-#     ip.set(ip_addr)
-#     Label(master, textvariable=ip).pack()
-#     # display = Label(master, text="sammy")
-#     #display.grid(row=20, column=10)
-#     #display.configure(text="%s" % str(ip_addr))
-#     display.pack()
-#     separator = Frame(height=500, width=500, bd=1, relief=SUNKEN)
-#     separator.pack(fill=X, padx=5, pady=5)
-#     Button(master, text="Upload file", command=fileupload).pack()
-    
-
-def fileupload():
-    while True:
-        uploadedfilenames = askopenfilenames(multiple=True)
-        if uploadedfilenames == '':
-            tkMessageBox.showinfo(message="File Upload has been cancelled program will stop")
-            return
-        uploadedfiles = master.tk.splitlist(uploadedfilenames)
-        if len(uploadedfiles)!=1:
-           tkMessageBox.showinfo(message="Select at least one file!")
-        else:
-            filenames.append(uploadedfiles)
-            serveFile(filenames[0][0])
-            return uploadedfiles
+    def fileupload(self):
+        while True:
+            uploadedfilenames = askopenfilenames(multiple=True)
+            if uploadedfilenames == '':
+                tkMessageBox.showinfo(message="File Upload has been cancelled program will stop")
+                return
+            uploadedfiles = root.tk.splitlist(uploadedfilenames)
+            if len(uploadedfiles)!=1:
+               tkMessageBox.showinfo(message="Select at least one file!")
+            else:
+                if uploadedfiles not in self.filenames:
+                    self.filenames.append(uploadedfiles)
+                #serveFile(filenames[0][0])
+                self.showUploadedFile()
+                return uploadedfiles
 
 
 # REWRITE
@@ -94,24 +87,6 @@ def serveFile(filename):
     # s.close()
     # return
 
-
-
-# # Create GUI
-# master = Tk()
-# master.title("Local Sockets")
-# display = Label(master, text="sammy")
-# filenames = []
-# ip = StringVar(master)
-# ip.set(ip_addr)
-# Label(master, textvariable=ip).pack()
-# # display = Label(master, text="sammy")
-# #display.grid(row=20, column=10)
-# #display.configure(text="%s" % str(ip_addr))
-# display.pack()
-# separator = Frame(height=500, width=500, bd=1, relief=SUNKEN)
-# separator.pack(fill=X, padx=5, pady=5)
-# Button(master, text="Upload file", command=fileupload).pack()
-# mainloop()
 
 
 
