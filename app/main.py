@@ -10,30 +10,27 @@ from ip import get_ip_addr
 
 class App:
     def __init__(self, master):
-        self.counter = 0
-
-        frame = Frame(master)
-        self.gFrame = Frame(master)
-        frame.pack()
+        self.ip_addr = ip_addr
+        self.port = 8080
+        self.url = str(self.ip_addr) + ':' + str(self.port)
+        self.servedFile = ""
+        self.frame = Frame(master)
+        self.frame.pack()
 
         self.button = Button(
-            frame, text="QUIT", fg="red", command=frame.quit
+            self.frame, text="QUIT", fg="red", command=self.frame.quit
             )
         self.button.pack(side=LEFT)
         
-        self.hi_there = Button(frame, text="Hello", command=self.say_hi)
+        self.hi_there = Button(self.frame, text="Hello", command=self.say_hi)
         self.hi_there.pack(side=LEFT)
-        self.label = Label(frame, text="%d" % self.counter)
-        self.label.pack()
+        # self.label = Label(frame, text="%d" % self.counter)
+        # self.label.pack()
 
     def say_hi(self):
-        frame = self.gFrame
         print "hi there, everyone!"
-        self.counter += 1
-        print("self counter: ", self.counter)
-        #self.label = Label(root, text="%d" % self.counter)
-        self.label.configure(text="%d" % self.counter)
-        self.label.pack()
+        # self.label.configure(text="%d" % self.ip_addr)
+        # self.label.pack()
 
 
 
@@ -120,3 +117,8 @@ def serveFile(filename):
 
 # get ip address
 ip_addr = get_ip_addr()
+
+root = Tk()
+app = App(root)
+root.mainloop()
+root.destroy() # optional; destroys python process if not already done so
