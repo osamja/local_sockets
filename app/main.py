@@ -19,6 +19,7 @@ class App:
         self.frame.pack(fill=X, padx=50, pady=50)
 
 
+        self.url_address = Label(self.frame, text="%s" % self.url).pack()
         self.upload = Button(master, text="Upload file", command=self.fileupload).pack()  
 
         self.hi_there = Button(self.frame, text="Hello", command=self.say_hi)
