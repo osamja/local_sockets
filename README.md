@@ -1,7 +1,9 @@
 # local_sockets
-version 0.0
+![Beta](https://img.shields.io/badge/status-beta-yellowgreen.svg?style=flat "Beta")
+![Version](https://img.shields.io/badge/Version-0.0-yellowgreen.svg)
 
-P2P File Transfer over local networks only. 
+
+P2P File Transfer over local networks.  
 
 Design Document for Project: local sockets
 ==========================================
