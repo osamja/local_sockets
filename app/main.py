@@ -5,41 +5,71 @@ import tkFileDialog
 import tkMessageBox
 import pdb
 import sys
-sys.path.insert(0, '/media/sammy/Baracuda/ubuntu/documents/summer_17/Networking/local_sockets/modules')
 from ip import get_ip_addr
+import time
+import BaseHTTPServer
+
+class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+    def do_HEAD(s):
+        s.send_response(200)
+        s.send_header("Content-type", "text/html")
+        s.end_headers()
+    def do_GET(s):
+        """Respond to a GET request."""
+        #pdb.set_trace()
+        if (s.path == path):  # retrieve uploaded file
+            print("Sending download...")
+            s.send_response(200)
+            s.send_header("Content-type", "multipart/form-data")
+            s.end_headers()
+            file = open(path, 'rb')
+            l = file.read(1024)
+            while(l):
+                s.wfile.write(l)
+                l = file.read(1024)
+            file.close()
+            return
+        s.send_response(200)            # display HTML pg
+        s.send_header("Content-type", "text/html")
+        s.end_headers()
+        s.wfile.write("Download <a href=")
+        s.wfile.write("%s" % path)
+        s.wfile.write(">file</a>")
 
 class App:
     def __init__(self, master):
         self.ip_addr = ip_addr
         self.port = 8080
         self.url = str(self.ip_addr) + ':' + str(self.port)
-        
         self.filenames = []
         self.frame = Frame(master)
         self.frame.pack(fill=X, padx=50, pady=50)
-
-
-        self.url_address = Label(self.frame, text="%s" % self.url).pack()
+        self.url_label = Label(self.frame, text="%s" % self.url).pack()
         self.upload = Button(master, text="Upload file", command=self.fileupload).pack()  
-
         self.hi_there = Button(self.frame, text="Hello", command=self.say_hi)
         self.hi_there.pack()
         self.servedFilename = Label(self.frame, text="")
         self.servedFilename.pack()
 
     def say_hi(self):
-        print "hi there, everyone!"
-        print("self upload: ", self.filenames) 
-        # self.label.configure(text="%d" % self.ip_addr)
-        # self.label.pack()
+        print("hi! self upload: ", self.filenames)
 
     def showUploadedFile(self):
         self.servedFilename.configure(text="%s" % self.filenames)
-        print('showing uploaded file name')
-        #self.servedFilename.configure(text="hi").pack()
-        return
 
-    def fileupload(self):
+    def serveFile(self, path):
+        HOST_NAME, PORT_NUMBER = self.ip_addr, self.port
+        server_class = BaseHTTPServer.HTTPServer
+        httpd = server_class((HOST_NAME, PORT_NUMBER), MyHandler)
+        print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            pass
+        httpd.server_close()
+        print time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, PORT_NUMBER)
+
+    def fileupload(self):   # GET MORE STABLE SOLUTION
         while True:
             uploadedfilenames = askopenfilenames(multiple=True)
             if uploadedfilenames == '':
@@ -48,53 +78,25 @@ class App:
             uploadedfiles = root.tk.splitlist(uploadedfilenames)
             if len(uploadedfiles)!=1:
                tkMessageBox.showinfo(message="Select at least one file!")
+               return
             else:
                 if uploadedfiles not in self.filenames:
                     self.filenames.append(uploadedfiles)
-                #serveFile(filenames[0][0])
+                #self.serveFile(self.filenames[0][0])
                 self.showUploadedFile()
-                return uploadedfiles
-
-
-# REWRITE
-# this function to utlize Python's built in HTTP server and serve up just FILENAME
-def serveFile(filename):
-    port = 8080                    # Reserve a port for your service.
-    # s = socket.socket()             # Create a socket object
-    # host = ip_addr
-    # s.bind((host, port))            # Bind to the port
-    # s.listen(5)   
-    # Label(master, textvariable=filename).pack()
-    # while True:
-    #     print('while true')
-    #     display.configure(text="new file")
-    #     print("uploading file ?")
-    #     conn, addr = s.accept()     # Establish connection with client.
-    #     print 'Got connection from', addr
-    #     data = conn.recv(1024)
-    #     print('Server received', repr(data))
-    #     f = open(filename,'rb')
-
-    #     l = f.read(1024)
-    #     while (l):
-    #        conn.send(l)
-    #        print('Sent ',repr(l))
-    #        l = f.read(1024)
-    #     f.close()
-
-    #     print('Done sending')
-    #     conn.send('Thank you for connecting')
-    #     conn.close()
-    # s.close()
-    # return
+                global path
+                path = uploadedfiles[0]
+                self.serveFile(path)
+                return
 
 
 
-
+path = None     # path to requested uploaded file
 # get ip address
 ip_addr = get_ip_addr()
-
 root = Tk()
 app = App(root)
 root.mainloop()
-root.destroy() # optional; destroys python process if not already done so
+
+
+#root.destroy() # optional; destroys python process if not already done so
