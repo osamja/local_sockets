@@ -1,5 +1,5 @@
 # local_sockets
-version 0.0
+![Beta](https://img.shields.io/badge/status-beta-yellowgreen.svg?style=flat "Beta")
 
 P2P File Transfer over local networks.  
 
