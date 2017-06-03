@@ -1,3 +1,36 @@
+
+
+
+
+"""
+Multithreaded server that extends the BaseHTTPServer - 
+    * https://stackoverflow.com/questions/14088294/multithreaded-web-server-in-python
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 """HTTP server classes.
 
 Note: BaseHTTPRequestHandler doesn't implement any HTTP request; see

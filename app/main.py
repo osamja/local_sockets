@@ -16,7 +16,6 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         s.end_headers()
     def do_GET(s):
         """Respond to a GET request."""
-        #pdb.set_trace()
         if (s.path == path):  # retrieve uploaded file
             print("Sending download...")
             s.send_response(200)
@@ -92,6 +91,7 @@ class App:
 
 
 path = None     # path to requested uploaded file
+fname_nopath = None     # trims path name up to filename
 # get ip address
 ip_addr = get_ip_addr()
 root = Tk()
