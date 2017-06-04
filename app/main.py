@@ -1,3 +1,6 @@
+from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from SocketServer import ThreadingMixIn
+import threading
 from Tkinter import *
 import socket
 from tkFileDialog import askopenfilenames
@@ -8,14 +11,14 @@ import sys
 from ip import get_ip_addr
 import time
 import BaseHTTPServer
+import thread
 
-class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class MyHandler(BaseHTTPRequestHandler):
     def do_HEAD(s):
         s.send_response(200)
         s.send_header("Content-type", "text/html")
         s.end_headers()
-    def do_GET(s):
-        """Respond to a GET request."""
+    def do_GET(s):      #"""Respond to a GET request."""
         if (s.path == path):  # retrieve uploaded file
             print("Sending download...")
             s.send_response(200)
@@ -34,6 +37,9 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         s.wfile.write("Download <a href=")
         s.wfile.write("%s" % path)
         s.wfile.write(">file</a>")
+
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    """Handle requests in a separate thread."""
 
 class App:
     def __init__(self, master):
@@ -58,8 +64,7 @@ class App:
 
     def serveFile(self, path):
         HOST_NAME, PORT_NUMBER = self.ip_addr, self.port
-        server_class = BaseHTTPServer.HTTPServer
-        httpd = server_class((HOST_NAME, PORT_NUMBER), MyHandler)
+        httpd = thread.start_new_thread(ThreadedHTTPServer((HOST_NAME, PORT_NUMBER), MyHandler))
         print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
         try:
             httpd.serve_forever()
