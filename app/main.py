@@ -64,7 +64,8 @@ class App:
 
     def serveFile(self, path):
         HOST_NAME, PORT_NUMBER = self.ip_addr, self.port
-        httpd = thread.start_new_thread(ThreadedHTTPServer((HOST_NAME, PORT_NUMBER), MyHandler))
+        #httpd = thread.start_new_thread(ThreadedHTTPServer((HOST_NAME, PORT_NUMBER), MyHandler))
+        httpd = BaseHTTPServer.HTTPServer((HOST_NAME, PORT_NUMBER), MyHandler)
         print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
         try:
             httpd.serve_forever()
@@ -86,18 +87,15 @@ class App:
             else:
                 if uploadedfiles not in self.filenames:
                     self.filenames.append(uploadedfiles)
-                #self.serveFile(self.filenames[0][0])
                 self.showUploadedFile()
                 global path
                 path = uploadedfiles[0]
                 self.serveFile(path)
-                return
 
 
 
 path = None     # path to requested uploaded file
-fname_nopath = None     # trims path name up to filename
-# get ip address
+#fname_nopath = None     # trims path name up to filename: TODO
 ip_addr = get_ip_addr()
 root = Tk()
 app = App(root)
