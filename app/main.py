@@ -51,10 +51,12 @@ class App:
         self.frame.pack(fill=X, padx=50, pady=50)
         self.url_label = Label(self.frame, text="%s" % self.url).pack()
         self.upload = Button(master, text="Upload file", command=self.fileupload).pack()  
+        self.serve = Button(master, text="Serve file", command=self.serveFile).pack()  
         self.hi_there = Button(self.frame, text="Hello", command=self.say_hi)
         self.hi_there.pack()
         self.servedFilename = Label(self.frame, text="")
         self.servedFilename.pack()
+        print("grinding")
 
     def say_hi(self):
         print("hi! self upload: ", self.filenames)
@@ -62,7 +64,7 @@ class App:
     def showUploadedFile(self):
         self.servedFilename.configure(text="%s" % self.filenames)
 
-    def serveFile(self, path):
+    def serveFile(self):
         HOST_NAME, PORT_NUMBER = self.ip_addr, self.port
         #httpd = thread.start_new_thread(ThreadedHTTPServer((HOST_NAME, PORT_NUMBER), MyHandler))
         httpd = BaseHTTPServer.HTTPServer((HOST_NAME, PORT_NUMBER), MyHandler)
@@ -75,6 +77,7 @@ class App:
         print time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, PORT_NUMBER)
 
     def fileupload(self):   # GET MORE STABLE SOLUTION
+        isFileServed = False
         while True:
             uploadedfilenames = askopenfilenames(multiple=True)
             if uploadedfilenames == '':
@@ -90,7 +93,12 @@ class App:
                 self.showUploadedFile()
                 global path
                 path = uploadedfiles[0]
-                self.serveFile(path)
+                isFileServed = True
+                return  # ideally this func only sets the path variable
+                #break
+        # if (isFileServed):
+        #     print("serving File")
+        #     self.serveFile(path)
 
 
 
