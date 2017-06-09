@@ -12,7 +12,9 @@ from ip import get_ip_addr
 import time
 import BaseHTTPServer
 import thread
+from threading import Thread
 
+# Server handler
 class MyHandler(BaseHTTPRequestHandler):
     def do_HEAD(s):
         s.send_response(200)
@@ -41,17 +43,18 @@ class MyHandler(BaseHTTPRequestHandler):
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """Handle requests in a separate thread."""
 
+# The main GUI app.
 class App:
     def __init__(self, master):
         self.ip_addr = ip_addr
         self.port = 8080
         self.url = str(self.ip_addr) + ':' + str(self.port)
-        self.filenames = []
+        self.filename = 'N/A'
         self.frame = Frame(master)
         self.frame.pack(fill=X, padx=50, pady=50)
         self.url_label = Label(self.frame, text="%s" % self.url).pack()
         self.upload = Button(master, text="Upload file", command=self.fileupload).pack()  
-        self.serve = Button(master, text="Serve file", command=self.serveFile).pack()  
+        self.serve = Button(master, text="Serve file", command=self.threadServer).pack()  
         self.hi_there = Button(self.frame, text="Hello", command=self.say_hi)
         self.hi_there.pack()
         self.servedFilename = Label(self.frame, text="")
@@ -59,10 +62,14 @@ class App:
         print("grinding")
 
     def say_hi(self):
-        print("hi! self upload: ", self.filenames)
+        print("hi! self upload: ", self.filename)
 
     def showUploadedFile(self):
-        self.servedFilename.configure(text="%s" % self.filenames)
+        self.servedFilename.configure(text="%s" % self.filename)
+
+    def threadServer(self):
+        t1 = Thread(target=self.serveFile)
+        t1.start()
 
     def serveFile(self):
         HOST_NAME, PORT_NUMBER = self.ip_addr, self.port
@@ -79,6 +86,7 @@ class App:
     def fileupload(self):   # GET MORE STABLE SOLUTION
         isFileServed = False
         while True:
+            print("Uploading file...")
             uploadedfilenames = askopenfilenames(multiple=True)
             if uploadedfilenames == '':
                 tkMessageBox.showinfo(message="File Upload has been cancelled program will stop")
@@ -88,22 +96,15 @@ class App:
                tkMessageBox.showinfo(message="Select at least one file!")
                return
             else:
-                if uploadedfiles not in self.filenames:
-                    self.filenames.append(uploadedfiles)
+                self.filename = uploadedfiles
                 self.showUploadedFile()
                 global path
                 path = uploadedfiles[0]
-                isFileServed = True
-                return  # ideally this func only sets the path variable
-                #break
-        # if (isFileServed):
-        #     print("serving File")
-        #     self.serveFile(path)
+                return
 
 
 
 path = None     # path to requested uploaded file
-#fname_nopath = None     # trims path name up to filename: TODO
 ip_addr = get_ip_addr()
 root = Tk()
 app = App(root)
