@@ -17,8 +17,9 @@ import thread
 from threading import Thread
 
 """
-Do isolated testing of the server. 
-    - No GUI or fileuploading involved. 
+Isolated testing of the server. 
+    - No GUI or fileuploading involved so that server testing is more rapid.  
+    - Import classes and functions from main.   
 """
 
 # Server handler

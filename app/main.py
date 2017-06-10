@@ -46,22 +46,17 @@ class App:
         self.serve_counter = 0
         self.ip_addr = ip_addr
         self.port = 8080
-        self.url = str(self.ip_addr) + ':' + str(self.port)
+        self.url = "Others on the same WiFi can type " + str(self.ip_addr) + ':' + str(self.port) + " into their browser to download the uploaded file. "
         self.filename = 'N/A'
-        self.frame = Frame(master)
-        self.frame.pack(fill=X, padx=50, pady=50)
-        self.url_label = Label(self.frame, text="%s" % self.url).pack()
+        self.frame = Frame(master, width=5000, height=5000)
+        self.frame.pack(fill=X, padx=100, pady=100,)
+        self.url_label = Label(self.frame, text="%s" % self.url)
+        #self.url_label = Label(self.frame, text="%s" % self.url).pack()
         self.upload = Button(master, text="Choose file", command=self.chooseFile).pack()  
         self.serve = Button(master, text="Upload file", command=self.threadServer).pack()  
-        self.hi_there = Button(self.frame, text="Hello", command=self.say_hi)
-        self.hi_there.pack()
         self.servedFilename = Label(self.frame, text="")
         self.servedFilename.pack()
         self.t1 = None
-
-    """ Show what file is being uploaded. """
-    def say_hi(self):
-        print("hi! self upload: ", self.filename)
 
     """ Update the GUI to display the file to be uploaded. """
     def showUploadedFile(self):
@@ -85,6 +80,7 @@ class App:
         HOST_NAME, PORT_NUMBER = self.ip_addr, self.port
         self.httpd = BaseHTTPServer.HTTPServer((HOST_NAME, PORT_NUMBER), MyHandler)
         self.httpd.allow_reuse_address = True
+        self.url_label.pack()
         print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
         try:
             self.httpd.serve_forever()
@@ -120,6 +116,12 @@ class App:
 path = None     # path to requested uploaded file
 ip_addr = get_ip_addr()
 root = Tk()
+root.wm_title("Local File Share")
+# frame1 = Frame(root, width=500, height=500, background="bisque")
+# frame2 = Frame(root, width=50, height = 50, background="#b22222")
+
+# frame1.pack(fill=None, expand=False)
+# frame2.place(relx=.5, rely=.5, anchor="c")
 app = App(root)
 root.protocol("WM_DELETE_WINDOW", app.on_closing)
 root.mainloop()
