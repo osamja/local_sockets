@@ -5,13 +5,16 @@
 
 ### P2P File Transfer over local networks.  
 
-* Local Sockets is a silly project codename for sharing files with others over WiFi.   
+* Local Sockets is a silly project codename for sharing files with others over the same WiFi.   
 
 ### Mission Statement
 * Create an easy, open, secure, and cross-platform solution to share files with others around you.  
 
 ### Installation
 * On a Windows/Mac/Linux desktop, run 'python app/main.py'
+
+#### Screenshot:
+![app screenshot](marketing/screenshots/Local_Sockets_Screenshot.png)
 
 ##### Contributors
 
