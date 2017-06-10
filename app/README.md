@@ -7,5 +7,7 @@
 ### IMPROVEMEMENTS
 	* Create more user-friendly GUI. ex. (Less buttons, better colors) 
 	* fname_nopath = getFileFromPath()  # Parses path name to be only filename. ex: /music/thriller.mp3 -> thriller.mp3
-
+	* Ability to upload multiple files.  Webpage should list all files that can be downloaded. 
+	* Make URL highlightable so it can be copy and pasted. 
+	* Ability to share URL (IP:Port) link.  
 

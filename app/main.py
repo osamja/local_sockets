@@ -51,8 +51,8 @@ class App:
         self.frame = Frame(master)
         self.frame.pack(fill=X, padx=50, pady=50)
         self.url_label = Label(self.frame, text="%s" % self.url).pack()
-        self.upload = Button(master, text="Upload file", command=self.fileupload).pack()  
-        self.serve = Button(master, text="Serve file", command=self.threadServer).pack()  
+        self.upload = Button(master, text="Choose file", command=self.chooseFile).pack()  
+        self.serve = Button(master, text="Upload file", command=self.threadServer).pack()  
         self.hi_there = Button(self.frame, text="Hello", command=self.say_hi)
         self.hi_there.pack()
         self.servedFilename = Label(self.frame, text="")
@@ -71,7 +71,7 @@ class App:
     def threadServer(self):
         print("Serve Counter: ", self.serve_counter)
         if (self.serve_counter == 0):
-            self.t1 = Thread(target=self.serveFile)
+            self.t1 = Thread(target=self.uploadFile)
             self.t1.start()
             self.serve_counter += 1
         else:
@@ -81,7 +81,7 @@ class App:
         
         
     """ Upload PATH to IP_ADDR at PORT to the built-in http server. """
-    def serveFile(self):
+    def uploadFile(self):
         HOST_NAME, PORT_NUMBER = self.ip_addr, self.port
         self.httpd = BaseHTTPServer.HTTPServer((HOST_NAME, PORT_NUMBER), MyHandler)
         self.httpd.allow_reuse_address = True
@@ -94,14 +94,14 @@ class App:
         print time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, PORT_NUMBER)
 
     """ Set PATH to chosen uploaded destination. """
-    def fileupload(self):   # GET MORE STABLE SOLUTION
+    def chooseFile(self):   # GET MORE STABLE SOLUTION
         while True:
             uploadedfilenames = askopenfilenames(multiple=True)
             if uploadedfilenames == '':
                 return
             uploadedfiles = root.tk.splitlist(uploadedfilenames)
             if len(uploadedfiles)!=1:
-               tkMessageBox.showinfo(message="Select at least one file!")
+               tkMessageBox.showinfo(message="Select one file!")
                return
             else:
                 self.filename = uploadedfiles
