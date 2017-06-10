@@ -1,30 +1,22 @@
 # local_sockets
-![Beta](https://img.shields.io/badge/status-beta-yellowgreen.svg?style=flat "Beta")
+![Beta](https://img.shields.io/badge/Status-Alpha-yellowgreen.svg?style=flat "Alpha")
 ![Version](https://img.shields.io/badge/Version-0.0-yellowgreen.svg)
 
 
-P2P File Transfer over local networks.  
+### P2P File Transfer over local networks.  
 
-Design Document for Project: local sockets
-==========================================
+* Local Sockets is a silly project codename for sharing files with others over WiFi.   
 
-## Group Members
+### Mission Statement
+* Create an easy, open, secure, and cross-platform solution to share files with others around you.  
 
-* Osam Javed <osamjaved@berkeley.edu>
+### Installation
+* On a Windows/Mac/Linux desktop, run 'python app/main.py'
 
-# Part 1: Views
-The desktop application will be written in Python using the Tkinter library. One button that says 'Upload File' clicking 
-on that button will allow you to select any file on your drive.  The url to download that file will then be displayed showing the
-<ip address> <port #> 
+##### Contributors
+
+* Osam Javed <http://osamjaved.com>
 
 
-# Additional Questions:
-
-## Next Steps
-* Create python script that
- 1. Gives me my ip address
-   - Assume user has internet connection. 
-   
- 2. Allow user to upload file. 
- 
- 3. Show IP and port where other ppl can download the file. 
+##### Next Steps
+* To contribute, check out app/Developer.md
