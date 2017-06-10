@@ -14,7 +14,7 @@ import BaseHTTPServer
 import thread
 from threading import Thread
 
-# Server handler
+""" Display landing webpage at IP_ADDR:PORT and allow download of PATH file. """
 class MyHandler(BaseHTTPRequestHandler):
     def do_HEAD(s):
         s.send_response(200)
@@ -33,19 +33,17 @@ class MyHandler(BaseHTTPRequestHandler):
                 l = file.read(1024)
             file.close()
             return
-        s.send_response(200)            # display HTML pg
+        s.send_response(200)       
         s.send_header("Content-type", "text/html")
         s.end_headers()
         s.wfile.write("Download <a href=")
         s.wfile.write("%s" % path)
         s.wfile.write(">file</a>")
 
-class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-    """Handle requests in a separate thread."""
-
-# The main GUI app.
+""" The main GUI app. Initializes GUI window and button events. """
 class App:
     def __init__(self, master):
+        self.serve_counter = 0
         self.ip_addr = ip_addr
         self.port = 8080
         self.url = str(self.ip_addr) + ':' + str(self.port)
@@ -59,37 +57,47 @@ class App:
         self.hi_there.pack()
         self.servedFilename = Label(self.frame, text="")
         self.servedFilename.pack()
-        print("grinding")
+        self.t1 = None
 
+    """ Show what file is being uploaded. """
     def say_hi(self):
         print("hi! self upload: ", self.filename)
 
+    """ Update the GUI to display the file to be uploaded. """
     def showUploadedFile(self):
         self.servedFilename.configure(text="%s" % self.filename)
 
+    """ Use another thread to serve files.  The GUI runs on main thread.  """
     def threadServer(self):
-        t1 = Thread(target=self.serveFile)
-        t1.start()
-
+        print("Serve Counter: ", self.serve_counter)
+        if (self.serve_counter == 0):
+            self.t1 = Thread(target=self.serveFile)
+            self.t1.start()
+            self.serve_counter += 1
+        else:
+            self.serve_counter += 1
+            print("Serve counter: ", self.serve_counter)
+            self.t1.run()
+        
+        
+    """ Upload PATH to IP_ADDR at PORT to the built-in http server. """
     def serveFile(self):
         HOST_NAME, PORT_NUMBER = self.ip_addr, self.port
-        #httpd = thread.start_new_thread(ThreadedHTTPServer((HOST_NAME, PORT_NUMBER), MyHandler))
-        httpd = BaseHTTPServer.HTTPServer((HOST_NAME, PORT_NUMBER), MyHandler)
+        self.httpd = BaseHTTPServer.HTTPServer((HOST_NAME, PORT_NUMBER), MyHandler)
+        self.httpd.allow_reuse_address = True
         print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
         try:
-            httpd.serve_forever()
+            self.httpd.serve_forever()
         except KeyboardInterrupt:
             pass
-        httpd.server_close()
+        self.httpd.server_close()
         print time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, PORT_NUMBER)
 
+    """ Set PATH to chosen uploaded destination. """
     def fileupload(self):   # GET MORE STABLE SOLUTION
-        isFileServed = False
         while True:
-            print("Uploading file...")
             uploadedfilenames = askopenfilenames(multiple=True)
             if uploadedfilenames == '':
-                tkMessageBox.showinfo(message="File Upload has been cancelled program will stop")
                 return
             uploadedfiles = root.tk.splitlist(uploadedfilenames)
             if len(uploadedfiles)!=1:
@@ -102,13 +110,16 @@ class App:
                 path = uploadedfiles[0]
                 return
 
-
+    """ User closed window. Shutdown GUI and server. """
+    def on_closing(self):
+        if (self.serve_counter > 0):
+            print("Closed server")
+            self.httpd.server_close()
+        root.destroy()
 
 path = None     # path to requested uploaded file
 ip_addr = get_ip_addr()
 root = Tk()
 app = App(root)
+root.protocol("WM_DELETE_WINDOW", app.on_closing)
 root.mainloop()
-
-
-#root.destroy() # optional; destroys python process if not already done so

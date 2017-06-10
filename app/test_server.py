@@ -1,3 +1,5 @@
+
+
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from SocketServer import ThreadingMixIn
 import threading
@@ -12,7 +14,14 @@ from ip import get_ip_addr
 import time
 import BaseHTTPServer
 import thread
+from threading import Thread
 
+"""
+Do isolated testing of the server. 
+    - No GUI or fileuploading involved. 
+"""
+
+# Server handler
 class MyHandler(BaseHTTPRequestHandler):
     def do_HEAD(s):
         s.send_response(200)
@@ -38,9 +47,22 @@ class MyHandler(BaseHTTPRequestHandler):
         s.wfile.write("%s" % path)
         s.wfile.write(">file</a>")
 
-def serveFile(path):
+
+def threadServer():
+    global serve_counter
+    if (serve_counter == 0):
+        t1 = Thread(target=serveFile)
+        t1.start()
+        return
+    serve_counter += 1
+    print("Serve counter: ", serve_counter)
+    t1.run()
+
+def serveFile():
+    if (serve_counter > 0):
+        print("Closed previous session")
+        httpd.server_close()
     HOST_NAME, PORT_NUMBER = ip_addr, port
-    #httpd = thread.start_new_thread(ThreadedHTTPServer((HOST_NAME, PORT_NUMBER), MyHandler))
     httpd = BaseHTTPServer.HTTPServer((HOST_NAME, PORT_NUMBER), MyHandler)
     print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
     try:
@@ -50,8 +72,11 @@ def serveFile(path):
     httpd.server_close()
     print time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, PORT_NUMBER)
 
+serve_counter = 0
 path = '/Users/sammy/local_sockets/app/mytext.txt'
 ip_addr = '10.0.1.55'
 port = 8080
+threadServer()
+path = '/Users/sammy/local_sockets/app/otherText.txt'
+threadServer()
 
-serveFile(path)
