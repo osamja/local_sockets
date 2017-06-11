@@ -13,8 +13,9 @@
 ### Installation
 * On a Windows/Mac/Linux desktop, run 'python app/main.py'
 
-#### Screenshot:
+#### Screenshots:
 ![app screenshot](marketing/screenshots/Local_Sockets_Screenshot.png)
+![web app screenshot](marketing/screenshots/web_interface.png)
 
 ##### Contributors
 
