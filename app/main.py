@@ -33,7 +33,7 @@ class MyHandler(BaseHTTPRequestHandler):
                 l = file.read(1024)
             file.close()
             return
-        s.send_response(200)       
+        s.send_response(200)
         s.send_header("Content-type", "text/html")
         s.end_headers()
         s.wfile.write("Download <a href=")
@@ -43,10 +43,12 @@ class MyHandler(BaseHTTPRequestHandler):
 """ The main GUI app. Initializes GUI window and button events. """
 class App:
     def __init__(self, master):
+        self.selectedPathnames = []
         self.serve_counter = 0
         self.ip_addr = ip_addr
         self.port = 8080
-        self.url = "Others on the same WiFi can type " + str(self.ip_addr) + ':' + str(self.port) + " into their browser to download the uploaded file. "
+        self.url = "Others on the same WiFi can type " + str(self.ip_addr) \
+            + ':' + str(self.port) + " into their browser to download the uploaded file. "
         self.filename = 'N/A'
         self.frame = Frame(master, width=5000, height=5000)
         self.frame.pack(fill=X, padx=100, pady=100,)
@@ -62,7 +64,7 @@ class App:
     def showUploadedFile(self):
         self.servedFilename.configure(text="%s" % self.filename)
 
-    """ Use another thread to serve files.  The GUI runs on main thread.  """
+    """ Use another thread to serve files since the GUI runs on main thread.  """
     def threadServer(self):
         print("Serve Counter: ", self.serve_counter)
         if (self.serve_counter == 0):
@@ -96,15 +98,12 @@ class App:
             if uploadedfilenames == '':
                 return
             uploadedfiles = root.tk.splitlist(uploadedfilenames)
-            if len(uploadedfiles)!=1:
-               tkMessageBox.showinfo(message="Select one file!")
-               return
-            else:
-                self.filename = uploadedfiles
-                self.showUploadedFile()
-                global path
-                path = uploadedfiles[0]
-                return
+            self.selectedPathnames = uploadedfiles
+            self.filename = uploadedfiles
+            self.showUploadedFile()
+            global path
+            path = uploadedfiles[0]
+            return
 
     """ User closed window. Shutdown GUI and server. """
     def on_closing(self):
@@ -117,11 +116,6 @@ path = None     # path to requested uploaded file
 ip_addr = get_ip_addr()
 root = Tk()
 root.wm_title("Local File Share")
-# frame1 = Frame(root, width=500, height=500, background="bisque")
-# frame2 = Frame(root, width=50, height = 50, background="#b22222")
-
-# frame1.pack(fill=None, expand=False)
-# frame2.place(relx=.5, rely=.5, anchor="c")
 app = App(root)
 root.protocol("WM_DELETE_WINDOW", app.on_closing)
 root.mainloop()
