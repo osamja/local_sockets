@@ -14,7 +14,7 @@
 * On a Windows/Mac/Linux desktop, run 'python app/main.py'
 
 #### Screenshots:
-![app screenshot](marketing/screenshots/Local_Sockets_Screenshot.png)
+![app screenshot](marketing/screenshots/desktopapp_screenshot.png)
 ![web app screenshot](marketing/screenshots/web_interface.png)
 
 ##### Contributors
