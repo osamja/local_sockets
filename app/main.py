@@ -1,17 +1,8 @@
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from SocketServer import ThreadingMixIn
-import threading
 from Tkinter import *
-import socket
 from tkFileDialog import askopenfilenames
-import tkFileDialog
-import tkMessageBox
-import pdb
-import sys
 from ip import get_ip_addr
 import time
-import BaseHTTPServer
-import thread
 from threading import Thread
 
 """ Display landing webpage at IP_ADDR:PORT and allow download of PATH file. """
@@ -21,8 +12,8 @@ class MyHandler(BaseHTTPRequestHandler):
         s.send_header("Content-type", "text/html")
         s.end_headers()
     def do_GET(s):      #"""Respond to a GET request."""
-        print("Path: ", path)
-        for file in path:
+        print("Path: ", filepaths)
+        for file in filepaths:
             if (s.path == file):  # retrieve uploaded file
                 print("Sending download...")
                 s.send_response(200)
@@ -40,7 +31,7 @@ class MyHandler(BaseHTTPRequestHandler):
         s.end_headers()
         s.wfile.write("<h3>Click on any of the files below to download them. </h3>")
         s.wfile.write("<ul>")
-        for file in path:
+        for file in filepaths:
             s.wfile.write("<li><a href='{0}'>{0}</a></li>".format(file))
         s.wfile.write("</ul>")
 
@@ -82,7 +73,7 @@ class App:
     """ Upload PATH to IP_ADDR at PORT to the built-in http server. """
     def uploadFile(self):
         HOST_NAME, PORT_NUMBER = self.ip_addr, self.port
-        self.httpd = BaseHTTPServer.HTTPServer((HOST_NAME, PORT_NUMBER), MyHandler)
+        self.httpd = HTTPServer((HOST_NAME, PORT_NUMBER), MyHandler)
         self.httpd.allow_reuse_address = True
         self.url_label.pack()
         print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
@@ -102,8 +93,8 @@ class App:
             uploadedfiles = root.tk.splitlist(uploadedfilenames)
             self.filenames = uploadedfilenames
             self.showUploadedFile()
-            global path
-            path = uploadedfiles
+            global filepaths
+            filepaths = uploadedfiles
             return
 
     """ User closed window. Shutdown GUI and server. """
@@ -113,7 +104,7 @@ class App:
             self.httpd.server_close()
         root.destroy()
 
-path = None     # path to requested uploaded file
+filepaths = None     # path for each file to be uploaded
 ip_addr = get_ip_addr()
 root = Tk()
 root.wm_title("Local File Share")
