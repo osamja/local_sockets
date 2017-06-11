@@ -8,7 +8,7 @@
 * Local Sockets is a silly project codename for sharing files with others over the same WiFi.   
 
 ### Mission Statement
-* Create an easy, open, secure, and cross-platform solution to share files with others around you.  
+* Create a fast, open, secure, and cross-platform solution to share files with others around you.  
 
 ### Installation
 * On a Windows/Mac/Linux desktop, run 'python app/main.py'
