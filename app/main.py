@@ -21,48 +21,50 @@ class MyHandler(BaseHTTPRequestHandler):
         s.send_header("Content-type", "text/html")
         s.end_headers()
     def do_GET(s):      #"""Respond to a GET request."""
-        if (s.path == path):  # retrieve uploaded file
-            print("Sending download...")
-            s.send_response(200)
-            s.send_header("Content-type", "multipart/form-data")
-            s.end_headers()
-            file = open(path, 'rb')
-            l = file.read(1024)
-            while(l):
-                s.wfile.write(l)
+        print("Path: ", path)
+        for file in path:
+            if (s.path == file):  # retrieve uploaded file
+                print("Sending download...")
+                s.send_response(200)
+                s.send_header("Content-type", "multipart/form-data")
+                s.end_headers()
+                file = open(file, 'rb')
                 l = file.read(1024)
-            file.close()
-            return
+                while(l):
+                    s.wfile.write(l)
+                    l = file.read(1024)
+                file.close()
+                return
         s.send_response(200)
         s.send_header("Content-type", "text/html")
         s.end_headers()
-        s.wfile.write("Download <a href=")
-        s.wfile.write("%s" % path)
-        s.wfile.write(">file</a>")
+        s.wfile.write("<h3>Click on any of the files below to download them. </h3>")
+        s.wfile.write("<ul>")
+        for file in path:
+            s.wfile.write("<li><a href='{0}'>{0}</a></li>".format(file))
+        s.wfile.write("</ul>")
 
 """ The main GUI app. Initializes GUI window and button events. """
 class App:
     def __init__(self, master):
-        self.selectedPathnames = []
+        self.frame = Frame(master, width=5000, height=5000)
         self.serve_counter = 0
         self.ip_addr = ip_addr
         self.port = 8080
         self.url = "Others on the same WiFi can type " + str(self.ip_addr) \
             + ':' + str(self.port) + " into their browser to download the uploaded file. "
-        self.filename = 'N/A'
-        self.frame = Frame(master, width=5000, height=5000)
-        self.frame.pack(fill=X, padx=100, pady=100,)
         self.url_label = Label(self.frame, text="%s" % self.url)
-        #self.url_label = Label(self.frame, text="%s" % self.url).pack()
+        self.filenames = 'N/A'
+        self.frame.pack(fill=X, padx=100, pady=100,)
         self.upload = Button(master, text="Choose file", command=self.chooseFile).pack()  
         self.serve = Button(master, text="Upload file", command=self.threadServer).pack()  
-        self.servedFilename = Label(self.frame, text="")
-        self.servedFilename.pack()
-        self.t1 = None
+        self.servedFilenames = Label(self.frame, text="")
+        self.servedFilenames.pack()
+        self.t1 = None    # server thread
 
     """ Update the GUI to display the file to be uploaded. """
     def showUploadedFile(self):
-        self.servedFilename.configure(text="%s" % self.filename)
+        self.servedFilenames.configure(text="%s" % str(self.filenames))
 
     """ Use another thread to serve files since the GUI runs on main thread.  """
     def threadServer(self):
@@ -92,17 +94,16 @@ class App:
         print time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, PORT_NUMBER)
 
     """ Set PATH to chosen uploaded destination. """
-    def chooseFile(self):   # GET MORE STABLE SOLUTION
+    def chooseFile(self):
         while True:
             uploadedfilenames = askopenfilenames(multiple=True)
             if uploadedfilenames == '':
                 return
             uploadedfiles = root.tk.splitlist(uploadedfilenames)
-            self.selectedPathnames = uploadedfiles
-            self.filename = uploadedfiles
+            self.filenames = uploadedfilenames
             self.showUploadedFile()
             global path
-            path = uploadedfiles[0]
+            path = uploadedfiles
             return
 
     """ User closed window. Shutdown GUI and server. """
