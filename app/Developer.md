@@ -13,7 +13,9 @@
 	* Ability to share URL (IP:Port) link.  
 	* portResolver().  This function would find an open port if 8080 is taken.  
 	* Add tests (see below).  
-	* Create a better landing page when downloading files.  
+	* Create a better landing page when downloading files. 
+	* Ensure multiple clients can download from the same server (multithreaded server)
+	* Show label if program is serving a GET request. 
 
 
 ### Production
